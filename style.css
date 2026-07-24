@@ -1,0 +1,219 @@
+/* Punjab Pedia — punjabpedia.in
+   Navy #1A2F4A · Gold #C9A84C · Display: Bitter · Body & Gurmukhi: Mukta Mahee
+   Signature device: the gold seal, carried over from the book covers. */
+
+:root {
+  --navy: #1A2F4A;
+  --navy-deep: #101F33;
+  --gold: #C9A84C;
+  --gold-pale: #EAD9A8;
+  --paper: #FBF9F4;
+  --ink: #23262B;
+  --muted: #5C6673;
+  --rule: #E4DDCC;
+  --max: 1080px;
+  --shadow: 0 1px 2px rgba(16,31,51,.05), 0 6px 20px rgba(16,31,51,.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: "Mukta Mahee", system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.65;
+  font-size: 17px;
+}
+
+img { max-width: 100%; display: block; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 22px; }
+
+h1, h2, h3 { font-family: "Bitter", Georgia, serif; color: var(--navy); line-height: 1.22; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.1rem); }
+h2 { font-size: clamp(1.35rem, 3vw, 1.65rem); }
+h3 { font-size: 1.1rem; }
+p { margin: 0.75rem 0; }
+a { color: var(--navy); }
+
+.eyebrow {
+  display: block; font-size: .74rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold); font-weight: 700; margin-bottom: .5rem;
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px;
+}
+
+/* ---------- Header ---------- */
+.site-header { background: var(--navy); border-bottom: 3px solid var(--gold); }
+.header-inner {
+  max-width: var(--max); margin: 0 auto; padding: 13px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.brand img { width: 42px; height: 42px; }
+.brand .name {
+  font-family: "Bitter", Georgia, serif; font-weight: 700; font-size: 1.28rem;
+  color: #fff; letter-spacing: .01em; line-height: 1.15; display: block;
+}
+.brand .name em { font-style: normal; color: var(--gold); }
+.brand .tag {
+  display: block; font-size: .68rem; color: var(--gold-pale);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.site-nav { display: flex; flex-wrap: wrap; gap: 2px; }
+.site-nav a {
+  color: #E4EAF2; text-decoration: none; font-size: .93rem;
+  padding: 7px 11px; border-radius: 4px;
+}
+.site-nav a:hover { background: rgba(201,168,76,.16); color: var(--gold-pale); }
+.site-nav a[aria-current="page"] { color: var(--gold); font-weight: 600; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; overflow: hidden; text-align: center;
+  background: linear-gradient(158deg, #1E3752 0%, var(--navy) 45%, var(--navy-deep) 100%);
+  color: #EDF1F6; padding: 70px 22px 60px;
+}
+.hero-map {
+  position: absolute; top: 50%; left: 50%; width: min(560px, 105vw);
+  transform: translate(-50%, -52%); opacity: .07; pointer-events: none;
+}
+.hero-inner { position: relative; max-width: 720px; margin: 0 auto; }
+.hero .pa {
+  font-family: "Mukta Mahee", sans-serif; font-weight: 700;
+  font-size: clamp(2.2rem, 7vw, 3.5rem); color: var(--gold); line-height: 1.35;
+}
+.hero .en {
+  font-family: "Bitter", Georgia, serif; font-size: clamp(1rem, 2.4vw, 1.3rem);
+  color: #fff; margin-top: 2px; letter-spacing: .04em;
+}
+.hero .lede { margin: 20px auto 0; max-width: 560px; color: #CBD5E2; }
+.cta {
+  display: inline-block; margin-top: 28px; background: var(--gold); color: var(--navy-deep);
+  font-weight: 700; text-decoration: none; padding: 13px 32px; border-radius: 4px;
+  transition: background .18s ease, transform .18s ease;
+}
+.cta:hover { background: var(--gold-pale); transform: translateY(-1px); }
+
+/* Trust strip */
+.proof {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+  margin-top: 40px; border-top: 1px solid rgba(201,168,76,.28); padding-top: 22px;
+}
+.proof div { padding: 0 26px; }
+.proof div + div { border-left: 1px solid rgba(201,168,76,.28); }
+.proof b {
+  display: block; font-family: "Bitter", Georgia, serif; font-size: 1.5rem; color: var(--gold);
+}
+.proof span { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: #A8B6C8; }
+.proof-note {
+  max-width: 540px; margin: 18px auto 0; font-size: .93rem;
+  color: #B7C3D2; line-height: 1.6;
+}
+@media (max-width: 560px) {
+  .proof div { padding: 8px 18px; }
+  .proof div + div { border-left: none; }
+}
+
+/* ---------- Sections ---------- */
+.block { padding: 52px 0; }
+.block + .block { border-top: 1px solid var(--rule); }
+.block h2 { margin-bottom: .5rem; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; gap: 26px; } }
+
+/* ---------- Book cards ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 22px; margin-top: 26px; }
+.card {
+  position: relative; background: #fff; border: 1px solid var(--rule);
+  border-radius: 7px; padding: 24px 22px 22px; box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 3px 6px rgba(16,31,51,.07), 0 14px 34px rgba(16,31,51,.1); }
+.card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
+  background: var(--gold); border-radius: 7px 7px 0 0;
+}
+
+/* the seal — the device carried over from the covers */
+.seal {
+  position: absolute; top: 16px; right: 16px; width: 74px; height: 74px;
+  border-radius: 50%; background: var(--navy); color: var(--gold-pale);
+  display: grid; place-content: center; text-align: center; line-height: 1.15;
+  font-size: .68rem; font-weight: 700; letter-spacing: .03em; padding: 6px;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--gold);
+}
+.card h3 { margin: 4px 84px .2rem 0; }
+.card .pa-title { font-size: 1.02rem; color: var(--gold); font-weight: 600; margin-bottom: .3rem; }
+.card .meta { font-size: .8rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.card .sub { font-size: .93rem; color: #40474F; margin: .6rem 0 0; }
+.card .note {
+  margin-top: .7rem; font-size: .84rem; color: var(--navy);
+  background: #F6F1E2; border-radius: 4px; padding: 6px 10px; display: inline-block;
+}
+.card .foot { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.card .price { font-family: "Bitter", Georgia, serif; font-weight: 700; color: var(--navy); font-size: 1.3rem; }
+.card .buy {
+  font-size: .9rem; font-weight: 700; color: var(--navy); text-decoration: none;
+  border: 1.5px solid var(--navy); padding: 8px 17px; border-radius: 4px;
+  transition: background .18s ease, color .18s ease;
+}
+.card .buy:hover { background: var(--navy); color: var(--gold-pale); }
+.card.soon { background: #F7F4EC; }
+.card.soon .seal { background: #8C7A46; }
+.card .soon-label { font-size: .9rem; font-weight: 700; color: var(--muted); }
+
+/* ---------- Text pages ---------- */
+.page { max-width: 760px; margin: 0 auto; padding: 46px 22px 68px; }
+.page h1 { border-bottom: 3px solid var(--gold); padding-bottom: 12px; margin-bottom: 6px; }
+.page h2 { margin: 2rem 0 .4rem; }
+.page h3 { margin: 1.5rem 0 .3rem; }
+.page ul, .page ol { margin: .7rem 0 .7rem 1.3rem; }
+.page li { margin: .35rem 0; }
+.updated { color: var(--muted); font-size: .87rem; }
+.infobox {
+  background: #fff; border: 1px solid var(--rule); border-left: 4px solid var(--gold);
+  border-radius: 6px; padding: 18px 22px; margin: 18px 0; box-shadow: var(--shadow);
+}
+.infobox p { margin: .3rem 0; }
+.callout {
+  background: var(--navy); color: #E4EAF2; border-radius: 7px; padding: 22px 26px; margin: 22px 0;
+}
+.callout h3 { color: var(--gold); margin-top: 0; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--navy-deep); color: #C2CBD8; margin-top: 46px; }
+.foot-inner {
+  max-width: var(--max); margin: 0 auto; padding: 40px 22px 30px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 30px;
+}
+@media (max-width: 760px) { .foot-inner { grid-template-columns: 1fr; gap: 22px; } }
+.site-footer h4 {
+  font-family: "Bitter", Georgia, serif; color: var(--gold); font-size: .92rem;
+  margin-bottom: 9px; letter-spacing: .07em;
+}
+.site-footer a { color: #C2CBD8; text-decoration: none; display: block; padding: 3px 0; font-size: .92rem; }
+.site-footer a:hover { color: var(--gold-pale); }
+.foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.foot-brand img { width: 38px; height: 38px; }
+.foot-brand span { font-family: "Bitter", Georgia, serif; font-weight: 700; font-size: 1.15rem; color: #fff; }
+.foot-brand span em { font-style: normal; color: var(--gold); }
+.foot-note { font-size: .9rem; }
+.copyright {
+  border-top: 1px solid rgba(255,255,255,.11); text-align: center;
+  font-size: .82rem; padding: 15px; color: #8996A6;
+}
+
+/* ---------- Motion (restrained, opt-out respected) ---------- */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .card, .cta { transition: none; }
+  .card:hover, .cta:hover { transform: none; }
+}

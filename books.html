@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Books & pricing — Punjab Pedia</title>
+<meta name="description" content="The full Punjab Pedia catalogue with prices — Punjab GK, PSSSB previous year papers, Punjabi grammar, reasoning and maths.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Mukta+Mahee:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-mark-gold.png" alt="" width="42" height="42">
+      <span><span class="name">Punjab <em>Pedia</em>&#8482;</span>
+      <span class="tag">ਤਿਆਰੀ ਤੋਂ ਚੋਣ ਤੱਕ · From Preparation to Selection</span></span>
+    </a>
+    <nav class="site-nav" aria-label="Main"><a href="index.html">Home</a><a href="about.html">About</a><a href="books.html" aria-current="page">Books</a><a href="contact.html">Contact</a></nav>
+  </div>
+</header>
+<main>
+<div class="wrap">
+<section class="block" style="border:0;">
+  <span class="eyebrow">Catalogue</span>
+  <h1 style="font-size:clamp(1.8rem,4.4vw,2.3rem);">Books &amp; pricing</h1>
+  <p style="max-width:640px;">All prices are Maximum Retail Price in Indian Rupees, inclusive of taxes. Books can be bought on Amazon.in, or ordered directly for bulk and institutional supply.</p>
+  <div class="grid" id="book-grid"><p>Loading books&hellip;</p></div>
+
+  <div class="infobox" style="margin-top:34px;">
+    <p><strong>Bookshops and coaching institutes:</strong> we supply directly on wholesale and consignment terms across Punjab. Get in touch through our <a href="contact.html">contact page</a>.</p>
+  </div>
+</section>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">
+        <img src="assets/logo-mark-gold.png" alt="" width="38" height="38">
+        <span>Punjab <em>Pedia</em>&#8482;</span>
+      </div>
+      <p class="foot-note">Bilingual exam-preparation books for Punjab government recruitment exams. A publishing brand of <strong>Krishna Devi Publications</strong>, Sangrur, Punjab.</p>
+      <p class="foot-note" style="margin-top:8px;"><a href="mailto:Punjabpediap2@gmail.com" style="display:inline;">Punjabpediap2@gmail.com</a> &middot; <a href="tel:+917696100377" style="display:inline;">7696-100-377</a></p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="about.html">About us</a>
+      <a href="books.html">Books &amp; pricing</a>
+      <a href="contact.html">Contact us</a>
+    </div>
+    <div>
+      <h4>Policies</h4>
+      <a href="privacy-policy.html">Privacy policy</a>
+      <a href="terms.html">Terms &amp; conditions</a>
+      <a href="refund-policy.html">Refund &amp; cancellation</a>
+      <a href="shipping-policy.html">Shipping policy</a>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2026 Punjab Pedia &middot; Krishna Devi Publications. All rights reserved.</div>
+</footer>
+<script>
+(function () {
+  var els = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    els.forEach(function (el) { el.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { rootMargin: "0px 0px -40px 0px" });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+<script>
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+function bookCard(b, ctx) {
+  var soon = b.status === "coming-soon";
+  var meta = [b.edition, b.language, b.author].filter(Boolean).join(" &middot; ");
+  var foot = soon
+    ? '<span class="soon-label">Coming soon</span>'
+    : '<span class="price">&#8377;' + esc(b.price) + '</span>' +
+      (ctx === "home"
+        ? '<a class="buy" href="books.html">View details</a>'
+        : '<a class="buy" href="' + esc(b.link) + '" target="_blank" rel="noopener">Buy on Amazon</a>');
+  return '<article class="card reveal' + (soon ? " soon" : "") + '">' +
+    (b.badge ? '<div class="seal">' + esc(b.badge) + '</div>' : '') +
+    '<h3>' + esc(b.title) + '</h3>' +
+    (b.titlePa ? '<div class="pa-title">' + esc(b.titlePa) + '</div>' : '') +
+    (meta ? '<div class="meta">' + meta + '</div>' : '') +
+    '<p class="sub">' + esc(b.subtitle) + '</p>' +
+    (b.note ? '<div class="note">' + esc(b.note) + '</div>' : '') +
+    '<div class="foot">' + foot + '</div></article>';
+}
+function loadBooks(gridId, ctx) {
+  var grid = document.getElementById(gridId);
+  fetch("books.json?v=" + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var list = (data.books || []);
+      if (ctx === "home") list = list.filter(function (b) { return b.featured; }).slice(0, 3);
+      grid.innerHTML = list.map(function (b) { return bookCard(b, ctx); }).join("") ||
+        "<p>Our catalogue is being updated. Please check back shortly.</p>";
+      grid.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+    })
+    .catch(function () {
+      grid.innerHTML = "<p>The book list could not be loaded. Please refresh the page.</p>";
+    });
+}
+</script>
+<script>loadBooks("book-grid","books");</script>
+</body>
+</html>

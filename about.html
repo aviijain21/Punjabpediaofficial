@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About us — Punjab Pedia</title>
+<meta name="description" content="Punjab Pedia publishes self-study exam preparation books for Punjab government recruitment exams, in English and Punjabi.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Mukta+Mahee:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-mark-gold.png" alt="" width="42" height="42">
+      <span><span class="name">Punjab <em>Pedia</em>&#8482;</span>
+      <span class="tag">ਤਿਆਰੀ ਤੋਂ ਚੋਣ ਤੱਕ · From Preparation to Selection</span></span>
+    </a>
+    <nav class="site-nav" aria-label="Main"><a href="index.html">Home</a><a href="about.html" aria-current="page">About</a><a href="books.html">Books</a><a href="contact.html">Contact</a></nav>
+  </div>
+</header>
+<main class="page">
+<h1>About us</h1>
+<p class="updated">Punjab Pedia&#8482; &middot; a publishing brand of Krishna Devi Publications, Sangrur</p>
+
+<h2>Our mission</h2>
+<p>Punjab has lakhs of hardworking aspirants preparing for government recruitment exams &mdash; PSSSB, PPSC, Patwari, Punjab Police and more. For most of them, clearing an exam means paying for coaching, because the books alone are never quite enough.</p>
+<p><strong>Punjab Pedia exists to change that.</strong> We publish material complete and reliable enough that a dedicated student can prepare entirely on their own and clear the exam through self-study &mdash; without depending on coaching. And because a large share of Punjab's aspirants studied in Punjabi medium, our books present content in English and Punjabi (Gurmukhi) together, so they can learn in the language they think in.</p>
+
+<h2>How our books are built</h2>
+<p>Every title is prepared from papers actually set by the agencies that conduct Punjab's recruitment exams. Topics that Punjab never asks are deliberately left out &mdash; an aspirant's time is the scarcest thing they have, and a book that pads its page count with irrelevant material is spending it for them.</p>
+
+<h2>What we publish</h2>
+<ul>
+<li><strong>Punjab General Knowledge</strong> &mdash; the complete syllabus in subjective form, and as an objective question bank, in both English and Punjabi</li>
+<li><strong>Previous year papers</strong> &mdash; full-length real PSSSB papers from 2015 to 2026, reproduced in the structure candidates actually face</li>
+<li><strong>Punjabi language and grammar</strong> &mdash; complete Paper A coverage with topic-wise MCQs and PYQs</li>
+<li><strong>Reasoning and mathematics</strong> &mdash; practice books scoped to what Punjab's papers actually test</li>
+</ul>
+
+<h2>Our story</h2>
+<p>The first book was simply <em>Punjab Pedia</em> &mdash; a single volume on the general knowledge of Punjab, written without any intention of starting a brand. A question bank followed, then its Punjabi edition, <em>Prashan Khazana</em>. That is when the name took hold with aspirants across Punjab, and Punjab Pedia became a brand in its own right, now a registered trademark.</p>
+<p>We have been writing for Punjab's aspirants since 2020, and we haven't stopped since &mdash; every year brings new editions, new data and new papers.</p>
+
+<h2>Where to find our books</h2>
+<p>Our books are available on <strong>Amazon.in</strong> and through selected bookshops and coaching institutes across Punjab. For bulk or institutional orders, see our <a href="contact.html">contact page</a>.</p>
+</main>
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">
+        <img src="assets/logo-mark-gold.png" alt="" width="38" height="38">
+        <span>Punjab <em>Pedia</em>&#8482;</span>
+      </div>
+      <p class="foot-note">Bilingual exam-preparation books for Punjab government recruitment exams. A publishing brand of <strong>Krishna Devi Publications</strong>, Sangrur, Punjab.</p>
+      <p class="foot-note" style="margin-top:8px;"><a href="mailto:Punjabpediap2@gmail.com" style="display:inline;">Punjabpediap2@gmail.com</a> &middot; <a href="tel:+917696100377" style="display:inline;">7696-100-377</a></p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="about.html">About us</a>
+      <a href="books.html">Books &amp; pricing</a>
+      <a href="contact.html">Contact us</a>
+    </div>
+    <div>
+      <h4>Policies</h4>
+      <a href="privacy-policy.html">Privacy policy</a>
+      <a href="terms.html">Terms &amp; conditions</a>
+      <a href="refund-policy.html">Refund &amp; cancellation</a>
+      <a href="shipping-policy.html">Shipping policy</a>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2026 Punjab Pedia &middot; Krishna Devi Publications. All rights reserved.</div>
+</footer>
+<script>
+(function () {
+  var els = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    els.forEach(function (el) { el.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { rootMargin: "0px 0px -40px 0px" });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

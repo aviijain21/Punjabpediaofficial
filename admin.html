@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Punjab Pedia</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Mukta+Mahee:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin { max-width: 900px; margin: 0 auto; padding: 34px 22px 70px; }
+  .field { margin: 11px 0; }
+  .field label { display:block; font-size:.75rem; font-weight:700; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; }
+  .field input[type=text], .field input[type=number], .field input[type=password], .field textarea, .field select {
+    width:100%; padding:9px 12px; border:1px solid var(--rule); border-radius:4px;
+    font-family:"Mukta Mahee",sans-serif; font-size:1rem; background:#fff; color:var(--ink);
+  }
+  .field textarea { min-height:66px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  @media (max-width:680px){ .row,.row3 { grid-template-columns:1fr; } }
+  .bookbox { background:#fff; border:1px solid var(--rule); border-left:4px solid var(--gold); border-radius:7px; padding:18px 22px; margin:16px 0; box-shadow:var(--shadow); }
+  .bookbox .rowtop { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .bookbox h3 { margin:0; font-size:1rem; }
+  .btn { font-family:"Mukta Mahee",sans-serif; font-size:.92rem; font-weight:700; border-radius:4px; padding:9px 17px; cursor:pointer; border:1.5px solid var(--navy); background:#fff; color:var(--navy); }
+  .btn:hover { background:var(--navy); color:var(--gold-pale); }
+  .btn.primary { background:var(--navy); color:#fff; }
+  .btn.primary:hover { background:var(--navy-deep); }
+  .btn.danger { border-color:#A33; color:#A33; }
+  .btn.danger:hover { background:#A33; color:#fff; }
+  .btn.small { padding:4px 10px; font-size:.8rem; }
+  #status { margin:14px 0; padding:11px 15px; border-radius:4px; display:none; font-size:.95rem; }
+  #status.ok  { display:block; background:#E9F3E9; border:1px solid #9BC49B; color:#1E5220; }
+  #status.err { display:block; background:#F8E9E9; border:1px solid #D9A0A0; color:#7A1F1F; }
+  #status.busy{ display:block; background:#FBF4DF; border:1px solid var(--gold); color:#6A5417; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; margin:16px 0; position:sticky; top:0; background:var(--paper); padding:12px 0; z-index:5; border-bottom:1px solid var(--rule); }
+  .checks { display:flex; gap:18px; flex-wrap:wrap; align-items:center; margin-top:10px; font-size:.92rem; }
+  details.setup { background:#fff; border:1px solid var(--rule); border-radius:7px; padding:16px 22px; margin:16px 0; box-shadow:var(--shadow); }
+  details.setup summary { cursor:pointer; font-weight:700; color:var(--navy); }
+  .hint { font-size:.86rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo-mark-gold.png" alt="" width="42" height="42">
+      <span><span class="name">Punjab <em>Pedia</em></span>
+      <span class="tag">Admin — books &amp; pricing</span></span>
+    </a>
+    <nav class="site-nav"><a href="index.html">&larr; Back to website</a></nav>
+  </div>
+</header>
+
+<main class="admin">
+<h1>Manage books</h1>
+<p class="hint">Edit any book below, then press <strong>Save &amp; publish</strong>. The live website updates in about a minute. This page isn't linked anywhere on the site, and nothing can be changed without your access token.</p>
+
+<details class="setup" id="setup">
+  <summary>Connection settings — one-time setup</summary>
+  <div class="row">
+    <div class="field"><label>GitHub username</label><input type="text" id="cfg-owner" placeholder="e.g. punjabpedia"></div>
+    <div class="field"><label>Repository name</label><input type="text" id="cfg-repo" placeholder="e.g. punjabpedia"></div>
+  </div>
+  <div class="field"><label>Access token</label><input type="password" id="cfg-token" placeholder="github_pat_…"></div>
+  <p class="hint">Create the token on GitHub: Settings &rarr; Developer settings &rarr; Fine-grained personal access tokens. Give it access to this one repository only, with <strong>Contents: read and write</strong>. It is stored only in this browser, on this device.</p>
+  <button class="btn primary" onclick="saveConfig()">Save settings and load books</button>
+</details>
+
+<div id="status"></div>
+
+<div class="toolbar">
+  <button class="btn" onclick="addBook()">+ Add book</button>
+  <button class="btn primary" onclick="publish()">Save &amp; publish</button>
+  <button class="btn" onclick="loadBooks()">Reload from GitHub</button>
+</div>
+
+<div id="list"><p class="hint">Open &ldquo;Connection settings&rdquo; above to load your books.</p></div>
+</main>
+
+<script>
+var state = { books: [], sha: null };
+
+function cfg() {
+  return { owner: localStorage.getItem("pp_owner") || "",
+           repo:  localStorage.getItem("pp_repo")  || "",
+           token: localStorage.getItem("pp_token") || "" };
+}
+function apiUrl() {
+  var c = cfg();
+  return "https://api.github.com/repos/" + c.owner + "/" + c.repo + "/contents/books.json";
+}
+function setStatus(msg, kind) {
+  var el = document.getElementById("status");
+  el.textContent = msg; el.className = kind || "";
+}
+function saveConfig() {
+  localStorage.setItem("pp_owner", document.getElementById("cfg-owner").value.trim());
+  localStorage.setItem("pp_repo",  document.getElementById("cfg-repo").value.trim());
+  var t = document.getElementById("cfg-token").value.trim();
+  if (t) localStorage.setItem("pp_token", t);
+  document.getElementById("setup").open = false;
+  loadBooks();
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+function loadBooks() {
+  var c = cfg();
+  if (!c.owner || !c.repo || !c.token) {
+    setStatus("Fill in the connection settings first.", "err");
+    document.getElementById("setup").open = true;
+    return;
+  }
+  setStatus("Loading books from GitHub…", "busy");
+  fetch(apiUrl(), { headers: { Authorization: "Bearer " + c.token, Accept: "application/vnd.github+json" } })
+    .then(function (r) {
+      if (!r.ok) throw new Error("GitHub returned " + r.status + " — check the username, repository name and token.");
+      return r.json();
+    })
+    .then(function (data) {
+      state.sha = data.sha;
+      var text = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
+      state.books = JSON.parse(text).books || [];
+      render();
+      setStatus("Loaded " + state.books.length + " books. Edit below, then Save & publish.", "ok");
+    })
+    .catch(function (e) { setStatus(e.message, "err"); });
+}
+
+function render() {
+  document.getElementById("list").innerHTML = state.books.map(function (b, i) {
+    return '<div class="bookbox">' +
+      '<div class="rowtop"><h3>' + esc(b.title || "Untitled") + '</h3><span>' +
+        '<button class="btn small" onclick="move(' + i + ',-1)" title="Move up">&uarr;</button> ' +
+        '<button class="btn small" onclick="move(' + i + ',1)" title="Move down">&darr;</button> ' +
+        '<button class="btn small danger" onclick="removeBook(' + i + ')">Delete</button></span></div>' +
+      '<div class="row">' +
+        '<div class="field"><label>Title</label><input type="text" value="' + esc(b.title) + '" oninput="upd(' + i + ',\'title\',this.value)"></div>' +
+        '<div class="field"><label>Punjabi title (optional)</label><input type="text" value="' + esc(b.titlePa) + '" oninput="upd(' + i + ',\'titlePa\',this.value)"></div>' +
+      '</div>' +
+      '<div class="field"><label>Description shown on the card</label><textarea oninput="upd(' + i + ',\'subtitle\',this.value)">' + esc(b.subtitle) + '</textarea></div>' +
+      '<div class="row3">' +
+        '<div class="field"><label>Seal text (e.g. 3800+ MCQs)</label><input type="text" value="' + esc(b.badge) + '" oninput="upd(' + i + ',\'badge\',this.value)"></div>' +
+        '<div class="field"><label>Price (&#8377;)</label><input type="number" min="0" value="' + esc(b.price) + '" oninput="upd(' + i + ',\'price\',this.value)"></div>' +
+        '<div class="field"><label>Status</label><select onchange="upd(' + i + ',\'status\',this.value)">' +
+          '<option value="available"' + (b.status === "available" ? " selected" : "") + '>Available</option>' +
+          '<option value="coming-soon"' + (b.status === "coming-soon" ? " selected" : "") + '>Coming soon</option>' +
+        '</select></div>' +
+      '</div>' +
+      '<div class="field"><label>Highlight line (optional)</label><input type="text" value="' + esc(b.note) + '" oninput="upd(' + i + ',\'note\',this.value)"></div>' +
+      '<div class="row3">' +
+        '<div class="field"><label>Author</label><input type="text" value="' + esc(b.author) + '" oninput="upd(' + i + ',\'author\',this.value)"></div>' +
+        '<div class="field"><label>Language</label><input type="text" value="' + esc(b.language) + '" oninput="upd(' + i + ',\'language\',this.value)"></div>' +
+        '<div class="field"><label>Edition</label><input type="text" value="' + esc(b.edition) + '" oninput="upd(' + i + ',\'edition\',this.value)"></div>' +
+      '</div>' +
+      '<div class="row">' +
+        '<div class="field"><label>ASIN</label><input type="text" value="' + esc(b.asin) + '" oninput="upd(' + i + ',\'asin\',this.value)"></div>' +
+        '<div class="field"><label>Amazon link</label><input type="text" value="' + esc(b.link) + '" oninput="upd(' + i + ',\'link\',this.value)"></div>' +
+      '</div>' +
+      '<div class="checks"><label><input type="checkbox" ' + (b.featured ? "checked" : "") + ' onchange="upd(' + i + ',\'featured\',this.checked)"> Show on homepage (first 3 ticked books appear)</label></div>' +
+      '</div>';
+  }).join("") || '<p class="hint">No books yet — press &ldquo;Add book&rdquo;.</p>';
+}
+
+function upd(i, key, val) {
+  if (key === "price") val = Number(val) || 0;
+  state.books[i][key] = val;
+  if (key === "title") {
+    var box = document.getElementById("list").children[i];
+    if (box) box.querySelector("h3").textContent = val || "Untitled";
+  }
+}
+function addBook() {
+  state.books.push({ title: "New book", titlePa: "", subtitle: "", badge: "", note: "",
+                     price: 0, author: "Ashok Garg", language: "", edition: "",
+                     asin: "", link: "", status: "available", featured: false });
+  render();
+  window.scrollTo(0, document.body.scrollHeight);
+}
+function removeBook(i) {
+  if (!confirm('Delete "' + state.books[i].title + '"? It is removed when you Save & publish.')) return;
+  state.books.splice(i, 1); render();
+}
+function move(i, dir) {
+  var j = i + dir;
+  if (j < 0 || j >= state.books.length) return;
+  var t = state.books[i]; state.books[i] = state.books[j]; state.books[j] = t;
+  render();
+}
+
+function publish() {
+  var c = cfg();
+  if (!c.token) { setStatus("Connect first using the settings above.", "err"); return; }
+  for (var i = 0; i < state.books.length; i++) {
+    if (!String(state.books[i].title).trim()) { setStatus("Book " + (i + 1) + " has no title.", "err"); return; }
+    if (state.books[i].status === "available" && !String(state.books[i].link).trim()) {
+      setStatus('"' + state.books[i].title + '" is marked Available but has no Amazon link.', "err"); return;
+    }
+  }
+  setStatus("Publishing…", "busy");
+  var body = JSON.stringify({ books: state.books }, null, 2);
+  var b64 = btoa(unescape(encodeURIComponent(body)));
+  fetch(apiUrl(), {
+    method: "PUT",
+    headers: { Authorization: "Bearer " + c.token, Accept: "application/vnd.github+json" },
+    body: JSON.stringify({ message: "Update books via admin panel", content: b64, sha: state.sha })
+  })
+    .then(function (r) {
+      if (!r.ok) throw new Error("Save failed (" + r.status + "). Press Reload from GitHub, then try again.");
+      return r.json();
+    })
+    .then(function (data) {
+      state.sha = data.content.sha;
+      setStatus("Published. The live website will show the changes in about a minute.", "ok");
+    })
+    .catch(function (e) { setStatus(e.message, "err"); });
+}
+
+(function () {
+  var c = cfg();
+  document.getElementById("cfg-owner").value = c.owner;
+  document.getElementById("cfg-repo").value = c.repo;
+  if (c.owner && c.repo && c.token) loadBooks();
+  else document.getElementById("setup").open = true;
+})();
+</script>
+</body>
+</html>
